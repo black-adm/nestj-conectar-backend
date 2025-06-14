@@ -19,6 +19,7 @@ async function bootstrap() {
     .setTitle('User Management API')
     .setDescription('Conéctar enterprise user management API reference.')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 
   const documentFactory = () => SwaggerModule.createDocument(app, config);

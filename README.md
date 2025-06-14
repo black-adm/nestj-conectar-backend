@@ -2,8 +2,6 @@
   <a href="https://www.conectarapp.com.br/" target="blank"><img src="https://cdn.prod.website-files.com/64f5ee2d1ec4b6735f2ff175/670faff330f3b9109e5a7460_logo_menu.png" alt="Conéctar Logo" /></a>
 </p>
 
-<h2 align="center">🚀 Projeto Conéctar - Backend</h2>
-
 ## 🛠️ Configuração do Projeto
 
 Na raiz do projeto, execute o comando abaixo para instalar todas as dependências:
