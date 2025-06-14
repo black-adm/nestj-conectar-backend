@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './application/auth/auth.module';
 import { UsersModule } from './domain/users/users.module';
 
 @Module({
@@ -15,11 +16,14 @@ import { UsersModule } from './domain/users/users.module';
         url: configService.get<string>('DATABASE_URL'),
         autoLoadEntities: true,
         synchronize: configService.get<string>('NODE_ENV') === 'development',
-        logging: configService.get<string>('NODE_ENV') === 'development',
+        migrations: ['dist/migrations/*{.ts,.js}'],
+        migrationsRun: true,
+        logging: ['query', 'error'],
       }),
       inject: [ConfigService],
     }),
     UsersModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
