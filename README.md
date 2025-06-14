@@ -14,6 +14,26 @@ Em seguida, inicie os containers do banco de dados PostgreSQL e do PgAdmin:
 $ docker compose up -d
 ```
 
+## 🔒 Configuração do Google OAuth
+
+Acesse o link abaixo e crie ou entre com sua conta se já possuir cadastro:
+```
+https://console.cloud.google.com
+```
+Após o cadastro ou login, crie um novo projeto no Google Cloud. Informe o nome do seu novo projeto e a organização.
+
+Com o projeto criado, acesse a aba `APIs e serviços` no menu `Acesso rápido`. Dentro de `APIs e serviços` acesse a aba `Tela de permissões OAuth`. 
+
+Agora é só clicar na aba `Clientes` dentro da página `Visão geral de OAuth` e cadastrar um novo cliente. 
+
+Selecione o tipo de aplicativo como `Aplicativo da Web` e de um nome para o seu cliente. 
+
+Na sessão `Origens JavaScript autorizadas` adicione a seguinte URL `http://localhost:3000/`.
+
+Após isso, finalize adicionando na sessão `URIs de redirecionamento autorizados` a seguinte URL `http://localhost:3333/auth/google/callback`.
+
+Agora, é só criar um arquivo `.env` na raiz do projeto e preencher as variáveis de ambientes do Google. Copie e cole o conteúdo do arquivo `.env.example` e substitua as variáveis `GOOGLE_CLIENT_ID` e `GOOGLE_CLIENT_SECRET`;
+
 ## ⚡ Executando a Aplicação
 
 ```bash
