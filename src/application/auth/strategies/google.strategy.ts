@@ -15,27 +15,34 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     });
   }
 
-  async validate(profile: any, done: VerifyCallback): Promise<any> {
-    const { id, name, emails } = profile;
+  async validate(
+    accessToken: string,
+    refreshToken: string,
+    profile: any,
+    done: VerifyCallback
+  ): Promise<any> {
+    try {
+      const { id, name, emails } = profile;
 
-    let user = await this.usersService.findByGoogleId(id);
-
-    if (!user) {
-      user = await this.usersService.findByEmail(emails[0].value);
+      let user = await this.usersService.findByGoogleId(id);
 
       if (user) {
         user.googleId = id;
         await this.usersService.update(user.id, { googleId: id }, user);
       }
 
-      user = await this.usersService.create({
-        name: `${name.givenName} ${name.familyName}`,
-        email: emails[0].value,
-        role: UserRole.USER,
-        googleId: id,
-      });
-    }
+      if (!user) {
+        user = await this.usersService.create({
+          name: `${name.givenName} ${name.familyName}`,
+          email: emails[0].value,
+          role: UserRole.USER,
+          googleId: id,
+        });
+      }
 
-    done(null, user);
+      done(null, user);
+    } catch (error) {
+      done(error, null);
+    }
   }
 }

@@ -19,7 +19,6 @@ export class AuthService {
 
   async register(registerDto: RegisterDto) {
     const existingUser = await this.usersService.findByEmail(registerDto.email);
-
     if (existingUser) throw new ConflictException('Email já está em uso');
 
     const user = await this.usersService.create({
@@ -28,9 +27,7 @@ export class AuthService {
     });
 
 
-    return {
-      userId: user.id
-    };
+    return { userId: user.id };
   }
 
   async login(loginDto: LoginDto) {

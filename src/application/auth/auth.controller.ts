@@ -40,7 +40,7 @@ export class AuthController {
     return this.authService.login(loginDto);
   }
 
-  @Get('google')
+  @Get('google/login')
   @UseGuards(GoogleAuthGuard)
   @ApiOperation({ summary: 'Fazer login com Google' })
   async googleAuth() {
