@@ -25,7 +25,7 @@ import { RolesGuard } from '@application/auth/guards/roles.guard';
 import { CreateUserDto } from './dto/create-user.dto';
 import { FiltersUsersDto } from './dto/filters-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserRole } from './entities/user.entity';
+import { UserRole } from './enums/user-role.enum';
 import { UsersService } from './users.service';
 
 @ApiTags('Users')
@@ -38,7 +38,7 @@ export class UsersController {
   @Post()
   @UseGuards(RolesGuard)
   @Roles(UserRole.ADMIN)
-  @ApiOperation({ summary: 'Criar novo usuário (Administradores)' })
+  @ApiOperation({ summary: 'Cadastrar um novo usuário (Administradores)' })
   @ApiResponse({ status: 201, description: 'Usuário criado com sucesso' })
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
@@ -54,7 +54,7 @@ export class UsersController {
   @Get('inactive')
   @UseGuards(RolesGuard)
   @Roles(UserRole.ADMIN)
-  @ApiOperation({ summary: 'Listar usuários inativos (Administradores)' })
+  @ApiOperation({ summary: 'Listar usuários com login inativos (Administradores)' })
   @ApiResponse({ status: 200, description: 'Lista de usuários inativos' })
   async findInactiveUsers() {
     const inactiveUsers = await this.usersService.findInactiveUsers();
@@ -69,7 +69,7 @@ export class UsersController {
   }
 
   @Get('me')
-  @ApiOperation({ summary: 'Obter dados do usuário logado' })
+  @ApiOperation({ summary: 'Obter dados do usuário atual logado' })
   @ApiResponse({ status: 200, description: 'Dados do usuário' })
   getProfile(@Request() req) {
     const { password, ...user } = req.user;
@@ -78,7 +78,7 @@ export class UsersController {
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Obter usuário por ID' })
+  @ApiOperation({ summary: 'Obter dados de usuário por ID' })
   @ApiResponse({ status: 200, description: 'Dados do usuário' })
   async findOne(@Param('id') id: string, @Request() req) {
     const user = await this.usersService.findOne(id);
@@ -93,7 +93,7 @@ export class UsersController {
   }
 
   @Patch(':id')
-  @ApiOperation({ summary: 'Atualizar usuário' })
+  @ApiOperation({ summary: 'Atualizar dados de usuário' })
   @ApiResponse({ status: 200, description: 'Usuário atualizado com sucesso' })
   async update(
     @Param('id') id: string,
@@ -109,7 +109,7 @@ export class UsersController {
   @Delete(':id')
   @UseGuards(RolesGuard)
   @Roles(UserRole.ADMIN)
-  @ApiOperation({ summary: 'Excluir usuário (Administradores)' })
+  @ApiOperation({ summary: 'Excluir usuário do sistema (Administradores)' })
   @ApiResponse({ status: 200, description: 'Usuário excluído com sucesso' })
   remove(@Param('id') id: string, @Request() req) {
     return this.usersService.remove(id, req.user);

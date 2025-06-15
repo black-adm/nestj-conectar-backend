@@ -8,7 +8,13 @@ import {
   UseGuards
 } from '@nestjs/common';
 
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiExcludeEndpoint,
+  ApiOperation,
+  ApiResponse,
+  ApiTags
+} from '@nestjs/swagger';
+
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
@@ -21,14 +27,14 @@ export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
   @Post('register')
-  @ApiOperation({ summary: 'Registrar novo usuário' })
+  @ApiOperation({ summary: 'Cadastrar um novo usuário' })
   @ApiResponse({ status: 201, description: 'Usuário registrado com sucesso' })
   register(@Body() registerDto: RegisterDto) {
     return this.authService.register(registerDto);
   }
 
   @Post('login')
-  @ApiOperation({ summary: 'Fazer login' })
+  @ApiOperation({ summary: 'Fazer login com as suas credenciais' })
   @ApiResponse({ status: 200, description: 'Login realizado com sucesso' })
   login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
@@ -36,14 +42,14 @@ export class AuthController {
 
   @Get('google')
   @UseGuards(GoogleAuthGuard)
-  @ApiOperation({ summary: 'Iniciar login com Google' })
+  @ApiOperation({ summary: 'Fazer login com Google' })
   async googleAuth() {
 
   }
 
   @Get('google/callback')
   @UseGuards(GoogleAuthGuard)
-  @ApiOperation({ summary: 'Callback do Google OAuth' })
+  @ApiExcludeEndpoint()
   async googleAuthRedirect(@Request() req, @Res() res: Response) {
     const result = await this.authService.googleLogin(req.user);
     const url = `/auth/success?token=${result.accessToken}`

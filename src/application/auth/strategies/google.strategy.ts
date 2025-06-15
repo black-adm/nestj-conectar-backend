@@ -1,4 +1,4 @@
-import { UserRole } from '@domain/users/entities/user.entity';
+import { UserRole } from '@domain/users/enums/user-role.enum';
 import { UsersService } from '@domain/users/users.service';
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';

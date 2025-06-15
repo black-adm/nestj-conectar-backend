@@ -16,8 +16,8 @@ async function bootstrap() {
   );
 
   const config = new DocumentBuilder()
-    .setTitle('User Management API')
-    .setDescription('Conéctar enterprise user management API reference.')
+    .setTitle('Conéctar User Management API')
+    .setDescription('The reference for the internal user management API of the Conéctar company.')
     .setVersion('1.0')
     .addBearerAuth()
     .build();
