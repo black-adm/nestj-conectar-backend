@@ -30,7 +30,7 @@ Selecione o tipo de aplicativo como `Aplicativo da Web` e de um nome para o seu 
 
 Na sessão `Origens JavaScript autorizadas` adicione a seguinte URL `http://localhost:3000/`.
 
-Após isso, finalize adicionando na sessão `URIs de redirecionamento autorizados` a seguinte URL `http://localhost:3333/auth/google/callback`.
+Após isso, finalize adicionando na sessão `URIs de redirecionamento autorizados` a seguinte URL `http://localhost:3333/api/v1/auth/google/callback`.
 
 Agora, é só criar um arquivo `.env` na raiz do projeto e preencher as variáveis de ambientes do Google. Copie e cole o conteúdo do arquivo `.env.example` e substitua as variáveis `GOOGLE_CLIENT_ID` e `GOOGLE_CLIENT_SECRET`;
 
@@ -64,5 +64,5 @@ $ pnpm run test:cov
 
 Com o servidor rodando, acesse a documentação da API no seguinte endereço:
 ```
-http://localhost:3333/api/docs
+http://localhost:3333/docs
 ```
