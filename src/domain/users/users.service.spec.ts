@@ -25,12 +25,12 @@ describe('UsersService', () => {
     password: 'hashedPassword',
     name: 'Test User',
     role: UserRole.USER,
-    googleId: "",
+    googleId: "GT-XXXXXXXXX",
     lastLoginAt: new Date(),
     createdAt: new Date(),
     updatedAt: new Date(),
     hashPassword: jest.fn(),
-    validatePassword: jest.fn().mockResolvedValue(true),
+    validatePassword: jest.fn().mockResolvedValue(true)
   };
 
   const mockAdmin: User = {
@@ -39,12 +39,12 @@ describe('UsersService', () => {
     password: 'hashedPassword',
     name: 'Admin User',
     role: UserRole.ADMIN,
-    googleId: "",
+    googleId: "GT-XXXXXXXXX",
     lastLoginAt: new Date(),
     createdAt: new Date(),
     updatedAt: new Date(),
     hashPassword: jest.fn(),
-    validatePassword: jest.fn().mockResolvedValue(true),
+    validatePassword: jest.fn().mockResolvedValue(true)
   };
 
   const mockQueryBuilder = {
@@ -136,34 +136,34 @@ describe('UsersService', () => {
       const total = 1;
 
       mockQueryBuilder.getManyAndCount.mockResolvedValue([users, total]);
-
       const result = await service.findAll(query, mockAdmin);
 
       expect(mockRepository.createQueryBuilder).toHaveBeenCalledWith('user');
+
       expect(mockQueryBuilder.andWhere).toHaveBeenCalledWith(
         'user.role = :role',
         { role: query.role }
       );
+
       expect(mockQueryBuilder.orderBy).toHaveBeenCalledWith(
         'user.name',
         'ASC'
       );
+
       expect(mockQueryBuilder.skip).toHaveBeenCalledWith(0);
       expect(mockQueryBuilder.take).toHaveBeenCalledWith(10);
 
       expect(result).toEqual({
-        data: [
-          {
-            id: '1',
-            email: 'test@example.com',
-            name: 'Test User',
-            role: UserRole.USER,
-            googleId: null,
-            lastLoginAt: mockUser.lastLoginAt,
-            createdAt: mockUser.createdAt,
-            updatedAt: mockUser.updatedAt
-          }
-        ],
+        data: [{
+          id: '1',
+          email: 'test@example.com',
+          name: 'Test User',
+          role: UserRole.USER,
+          googleId: 'GT-XXXXXXXXX',
+          lastLoginAt: mockUser.lastLoginAt,
+          createdAt: mockUser.createdAt,
+          updatedAt: mockUser.updatedAt
+        }],
         pagination: {
           page: 1,
           limit: 10,
@@ -321,31 +321,30 @@ describe('UsersService', () => {
       }
     );
 
-    it('should throw ConflictException when email is already in use',
-      async () => {
-        const existingUser = { ...mockUser, id: '3' };
-        mockRepository.findOne.mockResolvedValue(existingUser);
+    it('should throw ConflictException when email is already in use', async () => {
+      const existingUser = { ...mockUser, id: '2', email: 'updated@example.com' };
 
-        await expect(service.update('1', updateUserDto, mockAdmin))
-          .rejects.toThrow(
-            new ConflictException('Email já está em uso')
-          );
-      }
-    );
+      mockRepository.findOne
+        .mockResolvedValueOnce(mockUser)
+        .mockResolvedValueOnce(existingUser);
 
-    it('should not check email conflict when email is not changed',
-      async () => {
-        const updateWithoutEmailChange = { name: 'Updated Name' };
-        mockRepository.save.mockResolvedValue({
-          ...mockUser,
-          name: 'Updated Name'
-        });
+      await expect(service.update('1', updateUserDto, mockAdmin))
+        .rejects.toThrow(
+          new ConflictException('Email já está em uso')
+        );
+    });
 
-        await service.update('1', updateWithoutEmailChange, mockUser);
+    it('should not check email conflict when email is not changed', async () => {
+      const updateWithoutEmailChange = { name: 'Updated Name' };
+      mockRepository.findOne.mockResolvedValueOnce(mockUser);
+      await service.update('1', updateWithoutEmailChange, mockUser);
 
-        expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
-      }
-    );
+      expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
+
+      expect(mockRepository.findOne).toHaveBeenCalledWith({
+        where: { id: '1' }
+      });
+    });
   });
 
   describe('remove', () => {
@@ -411,23 +410,30 @@ describe('UsersService', () => {
 
   describe('sanitizeUser', () => {
     it('should remove password from user object', () => {
-      const query: FiltersUsersDto = {
-        order: 'asc',
-        page: 1,
-        limit: 10,
-        sortBy: 'name',
-      };
+      const user = {
+        id: '1',
+        email: 'test@example.com',
+        password: 'secret',
+        name: 'Test User',
+        role: UserRole.USER,
+        googleId: 'GT-XXXXXXXXX',
+        lastLoginAt: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date()
+      } as User;
 
-      const users = [mockUser];
-      const total = 1;
+      const sanitized = service['sanitizeUser'](user);
 
-      mockQueryBuilder.getManyAndCount.mockResolvedValue([users, total]);
-
-      return service.findAll(query, mockAdmin).then((result) => {
-        expect(result?.data[0]).not.toHaveProperty('password');
-        expect(result?.data[0]).toHaveProperty('id');
-        expect(result?.data[0]).toHaveProperty('email');
-        expect(result?.data[0]).toHaveProperty('name');
+      expect(sanitized).not.toHaveProperty('password');
+      expect(sanitized).toEqual({
+        id: '1',
+        email: 'test@example.com',
+        name: 'Test User',
+        role: UserRole.USER,
+        googleId: 'GT-XXXXXXXXX',
+        lastLoginAt: user.lastLoginAt,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt
       });
     });
   });

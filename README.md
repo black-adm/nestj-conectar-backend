@@ -66,3 +66,10 @@ Com o servidor rodando, acesse a documentação da API no seguinte endereço:
 ```
 http://localhost:3333/docs
 ```
+
+## Funcionalidades da aplicação
+
+Para realizar o login com o Google, acesse a seguinte URL:
+```
+http://localhost:3333/api/v1/auth/google/login
+```

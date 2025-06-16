@@ -103,7 +103,7 @@ export class UsersService {
         where: { email: updateUserDto.email },
       });
 
-      if (existingUser) {
+      if (existingUser && existingUser.id !== id) {
         throw new ConflictException('Email já está em uso');
       }
     }
@@ -142,8 +142,15 @@ export class UsersService {
   }
 
   private sanitizeUser(user: User): Partial<User> {
-    const { password, ...currentUser } = user;
-
-    return currentUser;
+    return {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      googleId: user.googleId,
+      lastLoginAt: user.lastLoginAt,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    };
   }
 }
