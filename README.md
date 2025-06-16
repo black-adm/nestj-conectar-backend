@@ -1,6 +1,12 @@
-<p align="center">
+<div align="center">
   <a href="https://www.conectarapp.com.br/" target="blank"><img src="./conectar-logo.png" alt="Conéctar Logo" /></a>
-</p>
+</div>
+
+<div align="center">
+
+[![Skills](https://skillicons.dev/icons?i=ts,nest,postgres,docker,pnpm,postman,netlify)](https://skillicons.dev)
+
+</div>
 
 ## 🛠️ Configuração do Projeto
 
