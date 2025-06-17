@@ -15,11 +15,11 @@ import {
   ApiTags
 } from '@nestjs/swagger';
 
+import { GoogleAuthGuard } from '@application/guards/google-auth.guard';
+import { AuthService } from '@application/services/auth/auth.service';
+import { LoginDto } from '@infrastructure/http/input/dtos/auth/login.dto';
+import { RegisterDto } from '@infrastructure/http/input/dtos/auth/register.dto';
 import { Response } from 'express';
-import { AuthService } from './auth.service';
-import { LoginDto } from './dto/login.dto';
-import { RegisterDto } from './dto/register.dto';
-import { GoogleAuthGuard } from './guards/google-auth.guard';
 
 @ApiTags('Authentication')
 @Controller('auth')

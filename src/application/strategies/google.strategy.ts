@@ -1,5 +1,5 @@
+import { UsersService } from '@application/services/users/users.service';
 import { UserRole } from '@domain/users/enums/user-role.enum';
-import { UsersService } from '@domain/users/users.service';
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, VerifyCallback } from 'passport-google-oauth20';

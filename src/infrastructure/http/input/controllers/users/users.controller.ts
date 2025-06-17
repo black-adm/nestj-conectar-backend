@@ -19,14 +19,14 @@ import {
   ApiTags
 } from '@nestjs/swagger';
 
-import { Roles } from '@application/auth/decorators/roles.decorator';
-import { JwtAuthGuard } from '@application/auth/guards/jwt-auth.guard';
-import { RolesGuard } from '@application/auth/guards/roles.guard';
-import { CreateUserDto } from './dto/create-user.dto';
-import { FiltersUsersDto } from './dto/filters-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { UserRole } from './enums/user-role.enum';
-import { UsersService } from './users.service';
+import { Roles } from '@application/decorators/roles.decorator';
+import { JwtAuthGuard } from '@application/guards/jwt-auth.guard';
+import { RolesGuard } from '@application/guards/roles.guard';
+import { UsersService } from '@application/services/users/users.service';
+import { UserRole } from '@domain/users/enums/user-role.enum';
+import { CreateUserDto } from '@infrastructure/http/input/dtos/users/create-user.dto';
+import { FiltersUsersDto } from '@infrastructure/http/input/dtos/users/filters-user.dto';
+import { UpdateUserDto } from '@infrastructure/http/input/dtos/users/update-user.dto';
 
 @ApiTags('Users')
 @ApiBearerAuth()

@@ -1,8 +1,8 @@
+import { AuthModule } from '@infrastructure/modules/auth.module';
+import { UsersModule } from '@infrastructure/modules/users.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule } from './application/auth/auth.module';
-import { UsersModule } from './domain/users/users.module';
 
 @Module({
   imports: [
