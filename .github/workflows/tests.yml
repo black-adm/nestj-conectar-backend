@@ -25,30 +25,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 10
+          version: 8
 
-      - name: Clean node_modules (Windows)
-        if: matrix.os == 'windows-latest'
+      - name: Clean install
         run: |
-          Remove-Item -Recurse -Force node_modules -ErrorAction SilentlyContinue
-          Remove-Item -Recurse -Force ~/.pnpm-store -ErrorAction SilentlyContinue
-
-      - name: Cache dependencies
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.pnpm-store
-            **/node_modules
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
-
-      - name: Install dependencies
-        run: pnpm install --force
+          pnpm install --frozen-lockfile --force
+          pnpm install resolve-cwd@3.0.0
 
       - name: Run tests
         run: pnpm run test --verbose
