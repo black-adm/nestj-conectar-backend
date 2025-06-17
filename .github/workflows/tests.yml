@@ -31,18 +31,24 @@ jobs:
         with:
           version: 10
 
+      - name: Clean node_modules (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          Remove-Item -Recurse -Force node_modules -ErrorAction SilentlyContinue
+          Remove-Item -Recurse -Force ~/.pnpm-store -ErrorAction SilentlyContinue
+
       - name: Cache dependencies
         uses: actions/cache@v3
         with:
           path: |
             ~/.pnpm-store
-            node_modules
+            **/node_modules
           key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-
 
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --force
 
       - name: Run tests
         run: pnpm run test --verbose
