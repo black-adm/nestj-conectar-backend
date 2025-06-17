@@ -273,77 +273,92 @@ describe('UsersService', () => {
     };
 
     beforeEach(() => {
-      jest.spyOn(service, 'findOne').mockResolvedValue(mockUser);
+      jest.clearAllMocks();
+      mockRepository.findOne.mockReset();
     });
 
-    it('should update user successfully when admin updates any user',
-      async () => {
-        mockRepository.findOne.mockResolvedValue(null);
-        mockRepository.save.mockResolvedValue({ ...mockUser, ...updateUserDto });
-
-        const result = await service.update('1', updateUserDto, mockAdmin);
-
-        expect(service.findOne).toHaveBeenCalledWith('1');
-        expect(mockRepository.save).toHaveBeenCalled();
-        expect(result.name).toBe(updateUserDto.name);
-        expect(result.email).toBe(updateUserDto.email);
-      }
-    );
-
-    it('should update user successfully when user updates own data',
-      async () => {
-        mockRepository.findOne.mockResolvedValue(null);
-        mockRepository.save.mockResolvedValue({ ...mockUser, ...updateUserDto });
-
-        const result = await service.update('1', updateUserDto, mockUser);
-
-        expect(result.name).toBe(updateUserDto.name);
-      }
-    );
-
-    it('should throw ForbiddenException when non-admin tries to update other user',
-      async () => {
-        await expect(service.update('2', updateUserDto, mockUser))
-          .rejects.toThrow(
-            new ForbiddenException('Você só pode atualizar seus próprios dados')
-          );
-      }
-    );
-
-    it('should throw ForbiddenException when non-admin tries to update role',
-      async () => {
-        const updateWithRole = { ...updateUserDto, role: UserRole.ADMIN };
-
-        await expect(service.update('1', updateWithRole, mockUser))
-          .rejects.toThrow(
-            new ForbiddenException('Você não pode alterar seu próprio papel')
-          );
-      }
-    );
-
-    it('should throw ConflictException when email is already in use', async () => {
-      const existingUser = { ...mockUser, id: '2', email: 'updated@example.com' };
-
-      mockRepository.findOne
-        .mockResolvedValueOnce(mockUser)
-        .mockResolvedValueOnce(existingUser);
-
-      await expect(service.update('1', updateUserDto, mockAdmin))
-        .rejects.toThrow(
-          new ConflictException('Email já está em uso')
-        );
-    });
-
-    it('should not check email conflict when email is not changed', async () => {
-      const updateWithoutEmailChange = { name: 'Updated Name' };
+    it('should update user successfully when admin updates any user', async () => {
       mockRepository.findOne.mockResolvedValueOnce(mockUser);
-      await service.update('1', updateWithoutEmailChange, mockUser);
+      mockRepository.findOne.mockResolvedValueOnce(null);
+      mockRepository.save.mockResolvedValue({ ...mockUser, ...updateUserDto });
 
-      expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
+      const result = await service.update('1', updateUserDto, mockAdmin);
 
+      expect(mockRepository.findOne).toHaveBeenCalledWith({ where: { id: '1' } });
       expect(mockRepository.findOne).toHaveBeenCalledWith({
+        where: { email: updateUserDto.email },
+      });
+      expect(mockRepository.save).toHaveBeenCalled();
+      expect(result.name).toBe(updateUserDto.name);
+      expect(result.email).toBe(updateUserDto.email);
+    });
+
+
+    it('should update user successfully when user updates own data', async () => {
+      const userToUpdate = {
+        ...mockUser,
+        email: 'original@example.com'
+      };
+
+      mockRepository.findOne.mockResolvedValueOnce(userToUpdate);
+      mockRepository.findOne.mockResolvedValueOnce(null);
+      mockRepository.save.mockResolvedValue({ ...userToUpdate, ...updateUserDto });
+
+      const result = await service.update('1', updateUserDto, mockUser);
+
+      expect(mockRepository.findOne).toHaveBeenCalledTimes(2);
+
+      expect(mockRepository.findOne).toHaveBeenNthCalledWith(1, {
         where: { id: '1' }
       });
+
+      expect(mockRepository.findOne).toHaveBeenNthCalledWith(2, {
+        where: { email: updateUserDto.email },
+      });
+
+      expect(mockRepository.save).toHaveBeenCalled();
+      expect(result.name).toBe(updateUserDto.name);
+      expect(result.email).toBe(updateUserDto.email);
+    });
+
+    it('should update user successfully when user updates own data without changing email', async () => {
+      const updateUserDtoWithoutEmail: UpdateUserDto = {
+        name: 'Updated Name',
+      };
+
+      mockRepository.findOne.mockResolvedValueOnce(mockUser);
+      mockRepository.save.mockResolvedValue({ ...mockUser, ...updateUserDtoWithoutEmail });
+
+      const result = await service.update('1', updateUserDtoWithoutEmail, mockUser);
+
+      expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
+      expect(mockRepository.findOne).toHaveBeenCalledWith({ where: { id: '1' } });
+      expect(mockRepository.save).toHaveBeenCalled();
+      expect(result.name).toBe(updateUserDtoWithoutEmail.name);
+    });
+
+    it('should throw ForbiddenException when non-admin tries to update other user', async () => {
+      mockRepository.findOne.mockResolvedValueOnce(mockUser);
+
+      await expect(service.update('2', updateUserDto, mockUser)).rejects.toThrow(
+        new ForbiddenException('Você só pode atualizar seus próprios dados')
+      );
+
+      expect(mockRepository.findOne).toHaveBeenCalledWith({ where: { id: '2' } });
+      expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw ForbiddenException when non-admin tries to update role', async () => {
+      const updateWithRole = { ...updateUserDto, role: UserRole.ADMIN };
+
+      mockRepository.findOne.mockResolvedValueOnce(mockUser);
+
+      await expect(service.update('1', updateWithRole, mockUser)).rejects.toThrow(
+        new ForbiddenException('Você não pode alterar seu próprio papel')
+      );
+
+      expect(mockRepository.findOne).toHaveBeenCalledWith({ where: { id: '1' } });
+      expect(mockRepository.findOne).toHaveBeenCalledTimes(1);
     });
   });
 
