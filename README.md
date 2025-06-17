@@ -2,6 +2,8 @@
   <a href="https://www.conectarapp.com.br/" target="blank"><img src="./conectar-logo.png" alt="Conéctar Logo" /></a>
 </div>
 
+&nbsp;
+
 <div align="center">
 
 [![Skills](https://skillicons.dev/icons?i=ts,nest,postgres,docker,pnpm,postman,netlify)](https://skillicons.dev)
