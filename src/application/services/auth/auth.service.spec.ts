@@ -6,8 +6,8 @@ import {
 import { UsersService } from '@application/services/users/users.service';
 import { User } from '@domain/users/entities/user.entity';
 import { UserRole } from '@domain/users/enums/user-role.enum';
-import { LoginDto } from '@infrastructure/http/input/dtos/auth/login.dto';
-import { RegisterDto } from '@infrastructure/http/input/dtos/auth/register.dto';
+import { LoginDto } from '@infrastructure/http/dtos/auth/login.dto';
+import { RegisterDto } from '@infrastructure/http/dtos/auth/register.dto';
 import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';

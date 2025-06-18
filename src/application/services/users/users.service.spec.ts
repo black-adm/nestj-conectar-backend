@@ -6,9 +6,9 @@ import {
 
 import { User } from '@domain/users/entities/user.entity';
 import { UserRole } from '@domain/users/enums/user-role.enum';
-import { CreateUserDto } from '@infrastructure/http/input/dtos/users/create-user.dto';
-import { FiltersUsersDto } from '@infrastructure/http/input/dtos/users/filters-user.dto';
-import { UpdateUserDto } from '@infrastructure/http/input/dtos/users/update-user.dto';
+import { CreateUserDto } from '@infrastructure/http/dtos/users/create-user.dto';
+import { FiltersUsersDto } from '@infrastructure/http/dtos/users/filters-user.dto';
+import { UpdateUserDto } from '@infrastructure/http/dtos/users/update-user.dto';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository, SelectQueryBuilder } from 'typeorm';

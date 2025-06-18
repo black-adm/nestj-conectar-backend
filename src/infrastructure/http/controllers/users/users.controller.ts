@@ -24,9 +24,9 @@ import { JwtAuthGuard } from '@application/guards/jwt-auth.guard';
 import { RolesGuard } from '@application/guards/roles.guard';
 import { UsersService } from '@application/services/users/users.service';
 import { UserRole } from '@domain/users/enums/user-role.enum';
-import { CreateUserDto } from '@infrastructure/http/input/dtos/users/create-user.dto';
-import { FiltersUsersDto } from '@infrastructure/http/input/dtos/users/filters-user.dto';
-import { UpdateUserDto } from '@infrastructure/http/input/dtos/users/update-user.dto';
+import { CreateUserDto } from '@infrastructure/http/dtos/users/create-user.dto';
+import { FiltersUsersDto } from '@infrastructure/http/dtos/users/filters-user.dto';
+import { UpdateUserDto } from '@infrastructure/http/dtos/users/update-user.dto';
 
 @ApiTags('Users')
 @ApiBearerAuth()

@@ -17,8 +17,8 @@ import {
 
 import { GoogleAuthGuard } from '@application/guards/google-auth.guard';
 import { AuthService } from '@application/services/auth/auth.service';
-import { LoginDto } from '@infrastructure/http/input/dtos/auth/login.dto';
-import { RegisterDto } from '@infrastructure/http/input/dtos/auth/register.dto';
+import { LoginDto } from '@infrastructure/http/dtos/auth/login.dto';
+import { RegisterDto } from '@infrastructure/http/dtos/auth/register.dto';
 import { Response } from 'express';
 
 @ApiTags('Authentication')
