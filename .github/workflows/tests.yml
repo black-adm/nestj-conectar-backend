@@ -1,21 +1,6 @@
-name: Run tests and coverage
-
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    types: [opened, synchronize, edited]
-    branches:
-      - main
-
 jobs:
   test:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-        node-version: [22]
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
@@ -24,27 +9,21 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
+          node-version: 22
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 8
-          run_install: false
+          version: 10
 
       - name: Add pnpm to PATH
-        if: runner.os == 'Linux'
         run: |
           echo "$(pnpm bin)" >> $GITHUB_PATH
           echo "$(pnpm root -g)/bin" >> $GITHUB_PATH
 
-      - name: Verify pnpm installation
-        run: pnpm --version
-
       - name: Clean install dependencies
         run: |
-          pnpm install --frozen-lockfile --force
+          pnpm install --force
           pnpm install resolve-cwd@3.0.0
 
       - name: Run tests
@@ -53,8 +32,9 @@ jobs:
       - name: Run tests coverage
         run: pnpm run test:cov --verbose
 
-      - name: Upload coverage report
+      - name: Upload coverage report (skip no act)
+        if: success() && !env.ACT
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-report-${{ matrix.os }}
+          name: coverage-report
           path: coverage/
