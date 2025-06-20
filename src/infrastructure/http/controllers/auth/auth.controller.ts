@@ -53,7 +53,7 @@ export class AuthController {
   async googleAuthRedirect(@Request() req, @Res() res: Response) {
     const result = await this.authService.googleLogin(req.user);
     const url = `/auth/success?token=${result.accessToken}`
-    const redirectUrl = `${process.env.FRONTEND_URL || 'http://localhost:3000'}/${url}`;
+    const redirectUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/${url}`;
 
     res.redirect(redirectUrl);
   }
