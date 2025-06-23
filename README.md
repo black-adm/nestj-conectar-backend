@@ -81,3 +81,9 @@ Para realizar o login com o Google, acesse a seguinte URL:
 ```
 http://localhost:3333/api/v1/auth/google/login
 ```
+
+## Front-end da aplicação
+
+O repositório com todo o código do front-end desta aplicação se encontra no link abaixo:
+
+[Link do repositório](https://github.com/black-adm/reactjs-conectar-ui)
